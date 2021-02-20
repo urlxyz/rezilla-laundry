@@ -1,0 +1,731 @@
+
+<html>
+<head>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto Mono', monospace, sans-serif;
+  font-size: 16px;
+  line-height: 1.45em;
+}
+
+main {
+  max-width: 450px;
+  margin: 0 auto;
+  box-shadow: 1px 1px 5px #ccc;
+  position: relative;
+}
+
+header {
+  color: #fff;
+  background: #789593;
+  position: absolute;
+  width: 100%;
+  right: 0;
+  z-index: 2;
+}
+
+header span {
+  padding: 8px 16px;
+  font-size: 0.88em;
+  cursor: pointer;
+}
+
+nav {
+  background: #587472;
+  padding: 10px;
+}
+
+.sum_total {
+  padding: 30px;
+  text-align: center;
+}
+
+.clearfix::after {
+  content: '';
+  clear: both;
+  display: table;
+}
+
+.sum_total h4 {
+  font-weight: 400;
+}
+
+.sum_total p {
+  padding: 5px;
+  font-size: 1.5em;
+}
+
+input[type='checkbox'] {
+  border-radius: 0;
+}
+
+.pull-right {
+  float: right;
+}
+
+.pull-left {
+  float: left;
+}
+
+.items {
+  max-height: 400px;
+  overflow: auto;
+}
+
+.item {
+  padding: 8px 32px;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+}
+
+.item p:first-child {
+  margin-bottom: 15px;
+}
+
+.item p:first-child::first-letter {
+  text-transform: uppercase;
+}
+
+.item p:not(:first-child) {
+  font-size: 0.78em;
+  font-weight: 400;
+}
+
+.remove_item {
+  font-size: 2em;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 6px;
+    color: red;
+    font-weight: bold;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.shopForm {
+  padding-top: 40px;
+  background: #3b3a38;
+  color: #fff;
+  padding: 8px 16px;
+}
+
+.shopForm form {
+  margin-top: 16px;
+}
+
+label {
+  font-size: 0.77em;
+}
+
+input, select {
+  display: block;
+  margin-bottom: 8px;
+  width: calc(100% - 24px);
+  padding: 5px 10px;
+}
+
+button {
+  margin-top: 8px;
+  background: #fff;
+  padding: 5px 15px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 5;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  max-width: 300px;
+  max-width: 400px;
+  height: inherit;
+  margin: 0 auto;
+  pointer-events: all;
+}
+
+.close {
+  color: #fff;
+  padding: 8px 16px 0 0;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.vertical-alignment-helper {
+  display: table;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+}
+
+.vertical-align-center {
+  display: table-cell;
+  vertical-align: middle;
+  pointer-events: none;
+  padding: 16px;
+}
+
+
+option {
+    display: block;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+.paket select {
+  padding: 10px;
+  overflow: hidden;
+}
+</style>
+</head>
+<body>
+<main>
+<form action="" method="post" id='add_transaksi_validate'>
+  <div class="form-grup">
+  <label for="nama">Nama Pelanggan</label>
+  <input type="text" name="nama_ck" placeholder="Nama lengkap" autocomplete="off" id="nama">
+  </div>
+  </header>
+  <section class="items"></section>
+  <div id="modal" class="modal">
+    <div class="vertical-alignment-helper">
+      <div class="vertical-align-center">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <div class="shopForm">
+    <div class="paket">
+            <select id="item-name" size=4>
+              <option value="7000">Reguler</option>
+              <option value="8000">Reguler 2</option>
+              <option value="10000">Express</option>
+            </select>     
+    </div>
+              <label for="">Quantity <input min="1" type="number" value="1" id="qty" required></label>
+              <button type="submit" id="addItem">+ Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+<div class="form-footer">
+    <div class="clearfix">
+      <span class="showAddItemModal pull-left">+ Add item</span>
+      <span class="clear-items pull-right">Clear all</span>
+    </div>
+    <div class="sum_total">
+      <h4>Total Sum</h4>
+      <p class="total">0</p>
+    </div>
+<button type="submit" name="order_ck" class="btn-sm bg-primary">Pesan</button>
+<button type="reset" class="btn-sm bg-transparent">Batal</button>
+</div>
+ </form> 
+</main>
+
+</body>
+<script id="rendered-js" >
+(window => {
+  window.$toJSON = string => JSON.parse(string);
+  window.$toString = json => JSON.stringify(json);
+  // Get element(s) by CSS selector:
+  window.qs = (selector, scope) => (scope || document).querySelector(selector);
+  window.qsa = (selector, scope) =>
+    (scope || document).querySelectorAll(selector);
+  // addEventListener wrapper:
+  window.$on = (target, type, callback) =>
+    target.addEventListener(type, callback, false);
+  // Attach a handler to event for all elements that match the selector,
+  // now or in the future, based on a root element
+  window.$delegate = (target, selector, type, handler) => {
+    function dispatchEvent(event) {
+      var targetElement = event.target;
+      var potentialElements = window.qsa(selector, target);
+      var hasMatch =
+        Array.prototype.indexOf.call(potentialElements, targetElement) >= 0;
+
+      if (hasMatch) {
+        handler.call(targetElement, event);
+      }
+    }
+
+    window.$on(target, type, dispatchEvent);
+  };
+  // Find the element's parent with the given tag name:
+  // $parent(qs('.item'), 'div');
+  window.$parent = function(element, tagName) {
+    if (!element.parentNode) {
+      return;
+    }
+    if (element.parentNode.tagName.toLowerCase() === tagName.toLowerCase()) {
+      return element.parentNode;
+    }
+    return window.$parent(element.parentNode, tagName);
+  };
+  // Allow for looping on nodes by chaining:
+  // qsa('.foo').forEach(function () {})
+  NodeList.prototype.forEach = Array.prototype.forEach;
+})(window);
+
+
+
+
+(window => {
+  class Template {
+    createItem({ name, qty, price, subTotal, id }) {
+      return (
+        `<div class="item clearfix" data-item='${id}'>` +
+        `<p>Paket: <span class="pull-right">${name}</span>` +
+        `<input name="paket_ck" type="hidden" value='${name}' class="item_name">` +
+        `</p>` +
+        `<span class="remove_item">&times;</span>` +
+        `<p>Qty: <span class="pull-right">${qty}</span>` +
+        `<input name="berat_ck" type="hidden" value='${qty}' class="pull-right">` +
+        `</p>` +
+        `<p>Harga/kg: <span class="pull-right">${this.formatPrice(price)}</span>` +
+        `<input name="harga_ck" type="hidden" value='${this.formatPrice(price)}'>` +
+        `</p>` +
+        `<p>Sub-total: <span class="pull-right">${this.formatPrice(subTotal || 0)}</span>` +
+        `<input name="total_ck" type="hidden" value='${this.formatPrice(subTotal || 0)}'>` +
+        `</p>` +
+        `</div>`
+      );
+    }
+
+    show(data) {
+      const view = data
+        .map(shopItem => {
+          return this.createItem(shopItem);
+        })
+        .join("");
+
+      return view || "";
+    }
+
+    newItem(data) {
+      return this.createItem(data);
+    }
+
+    formatPrice(value) {
+      return `${value.toLocaleString()}`;
+    }
+  }
+
+  window.shop = window.shop || {};
+  window.shop.Template = Template;
+})(window);
+
+
+
+(window => {
+  class Store {
+    constructor(storeName) {
+      this.db = window.localStorage || {};
+      this.dbName = storeName;
+      this.defaultData = {
+        items: []
+      };
+
+      if (!this.db[storeName]) {
+        this.db[storeName] = JSON.stringify(this.defaultData);
+      }
+    }
+
+    store() {
+      return this.db[this.dbName];
+    }
+
+    _updateStore(data) {
+      this.db[this.dbName] = $toString(data);
+    }
+
+    storeToJSON() {
+      return $toJSON(this.store());
+    }
+
+    save(item, callback) {
+      const store = this.storeToJSON(),
+        items = store.items;
+      items.push(item);
+      this._updateStore(store);
+      callback(item);
+    }
+
+    find(cb) {
+      const data = this.storeToJSON().items || [];
+      cb(data);
+    }
+
+    remove(id, callback) {
+      const store = this.storeToJSON();
+
+      store.items = store.items.filter(item => {
+        return item.id !== id;
+      });
+
+      this._updateStore(store);
+      callback(store);
+    }
+
+    drop(cb) {
+      this._updateStore(this.defaultData);
+      cb(this.defaultData.items);
+    }
+  }
+
+  window.shop = window.shop || {};
+  window.shop.Store = Store;
+})(window);
+
+(window => {
+  class Model {
+    constructor(storage) {
+      this.storage = storage;
+    }
+
+    create(data, cb) {
+      const newItem = data;
+      this.storage.save(newItem, cb);
+    }
+    read(cb) {
+      if (!(typeof cb === "function")) return;
+      this.storage.find(cb);
+    }
+
+    remove(id, cb) {
+      this.storage.remove(id, cb);
+    }
+
+    removeAll(cb) {
+      this.storage.drop(cb);
+    }
+  }
+
+  window.shop = window.shop || {};
+  window.shop.Model = Model;
+})(window);
+
+
+
+
+(window => {
+  class View {
+    constructor(template) {
+      this.template = template;
+      this.$items = document.querySelector(".items");
+      this.$sumTotal = document.querySelector(".total");
+      this.$removeItems = qs(".clear-items");
+      this.$itemName = qs("#item-name");
+      this.$quantity = qs("#qty");
+      this.$addItemBtn = qs("#addItem");
+      this.$modal = qs("#modal");
+      this.controller = null;
+
+      this._initModal();
+    }
+
+    bind(event, handler) {
+      const self = this;
+      switch (event) {
+        case "removeItem":
+          $delegate(this.$items, ".remove_item", "click", function() {
+            handler(self._itemId(this));
+          });
+          break;
+        case "clearItems":
+          $on(this.$removeItems, "click", () => handler());
+          break;
+        case "saveItem":
+          $on(this.$addItemBtn, "click", e => {
+            e.preventDefault();
+
+            const name = this.$itemName.options[this.$itemName.selectedIndex].text,
+            price = this.$itemName.value,
+              qty = this.$quantity.value;
+
+            handler({ name, qty, price });
+            this._clearInputs([this.$quantity]);
+            this._hideModal();
+          });
+          break;
+        default:
+          break;
+      }
+    }
+
+    _initModal() {
+      // Get the button that opens the modal
+      const btn = qs(".showAddItemModal");
+      // Get the <span> element that closes the modal
+      const span = qs(".close");
+
+      btn.onclick = () => this._showModal();
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = () => this._hideModal();
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = event => {
+        if (event.target == modal) {
+          this._hideModal();
+        }
+      };
+    }
+
+    _showModal() {
+      this.$modal.style.display = "block";
+    }
+
+    _hideModal() {
+      this.$modal.style.display = "none";
+    }
+
+    _clearInputs(inputs) {
+      inputs.forEach(input => {
+        input.value = "";
+      });
+    }
+
+    _itemId(element) {
+      const li = $parent(element, "div");
+      return li.getAttribute("data-item");
+    }
+
+    init() {
+      this.controller.getItems();
+    }
+
+    render(action, data) {
+      const viewActions = {
+        showItems: () => {
+          this.$items.innerHTML = this.template.show(data);
+        },
+        addItem: () => {
+          this.$items.insertAdjacentHTML(
+            "afterbegin",
+            this.template.newItem(data)
+          );
+        },
+        removeItem: () => {
+          const elem = document.querySelector(`[data-item='${data.id}']`);
+          this.$items.removeChild(elem);
+        },
+        clearItems: () => {
+          this.$items.innerHTML = this.template.show(data);
+        }
+      };
+
+      viewActions[action]();
+      this.controller.calculateSumTotal(data => {
+        this.$sumTotal.textContent = data;
+      });
+    }
+
+    setController(controller) {
+      this.controller = controller;
+    }
+  }
+
+  window.shop = window.shop || {};
+  window.shop.View = View;
+})(window);
+
+
+
+
+(window => {
+  /**
+   * Takes a model and view and acts as the controller between them
+   *
+   * @constructor
+   * @param {object} model The model instance
+   * @param {object} view The view instance
+   */
+
+  class ShopController {
+    constructor(model, view) {
+      this.model = model;
+      this.view = view;
+
+      this.view.bind("saveItem", data => {
+        this.addItem(data);
+      });
+      this.view.bind("removeItem", id => {
+        this.removeItem(id);
+      });
+      this.view.bind("clearItems", () => {
+        this.clearItems();
+      });
+    }
+
+    /**
+     * An event to fire on load.
+     * Get all items from the model-store and populate the view
+     */
+    getItems() {
+      this.model.read(data => {
+        this.view.render(
+          "showItems",
+          data.map(item => this._withSubTotal(item)).reverse()
+        );
+      });
+    }
+
+    /**
+     * Takes a shop item object, pass it to the model and stores it then
+     * modify the newly inserted item, adding to it, the sub-total
+     * then update the view with just this one update.
+     * @param {object} shop item
+     */
+    addItem(item = {}) {
+      if (item.name && item.qty && item.price) {
+        const id = new Date().getTime().toString(36);
+        this.model.create({ ...item, id }, insertedData => {
+          if (!insertedData) return;
+
+          this.view.render("addItem", this._withSubTotal(insertedData));
+        });
+      }
+    }
+
+    /**
+     * By giving it an ID it'll find the DOM element matching that ID,
+     * remove it from the DOM and also remove it from storage.
+     *
+     * @param {number} id The ID of the item to remove from the DOM and
+     * storage
+     */
+    removeItem(id) {
+      if (!id || !id.trim()) return;
+
+      this.model.remove(id, deletedData => {
+        this.view.render("removeItem", { id });
+      });
+    }
+
+    /**
+     * Clear all calcualted items from both the view and model store
+     */
+    clearItems() {
+      this.model.removeAll(items => {
+        this.view.render("clearItems", items);
+      });
+    }
+
+    /**
+     * Calculates the sum total of all items and returns
+     * a formated sum total to its caller (the view)
+     * @param {function} callback
+     * @returns {String}
+     */
+    calculateSumTotal(callback) {
+      this.model.read(data => {
+        const sumTotal = !data.length
+          ? 0
+          : data
+              .map(item => this._withSubTotal(item).subTotal)
+              .reduce((sum, subTotal) => sum + subTotal);
+
+        callback(this._formatPrice(sumTotal));
+      });
+    }
+
+    _formatPrice(price) {
+      return parseFloat(price.toFixed(2)).toLocaleString();
+    }
+
+    /**
+     * Takes a shop item {name, price, qty, id}
+     * caculates its sub-total
+     * and returns a modified item object {name, price, qty, id, subTotal}
+     * @param {object} shop item
+     */
+    _withSubTotal(data) {
+      const { qty, price } = data;
+      return { ...data, subTotal: qty * price };
+    }
+  }
+
+  window.shop = window.shop || {};
+  window.shop.Controller = ShopController;
+})(window);
+
+
+
+
+(() => {
+  class ShopCalculator {
+    constructor(name) {
+      const shop = window.shop;
+      this.storage = new shop.Store(name);
+      this.model = new shop.Model(this.storage);
+      this.template = new shop.Template();
+      this.view = new shop.View(this.template);
+      this.controller = new shop.Controller(this.model, this.view);
+
+      this.view.setController(this.controller);
+    }
+  }
+
+  const shopCalculator = new ShopCalculator("shop");
+  shopCalculator.view.init();
+  window.$sc = shopCalculator;
+})();
+
+var myDate = new Date();
+
+let daysList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+let monthsList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Aug', 'Oct', 'Nov', 'Dec'];
+
+
+let date = myDate.getDate();
+let month = monthsList[myDate.getMonth()];
+let year = myDate.getFullYear();
+let day = daysList[myDate.getDay()];
+
+let today = `${date} ${month} ${year}, ${day}`;
+
+let amOrPm;
+let twelveHours = function (){
+    if(myDate.getHours() > 12)
+    {
+        amOrPm = 'PM';
+        let twentyFourHourTime = myDate.getHours();
+        let conversion = twentyFourHourTime - 12;
+        return `${conversion}`
+
+    }else {
+        amOrPm = 'AM';
+        return `${myDate.getHours()}`}
+};
+let hours = twelveHours();
+let minutes = myDate.getMinutes();
+
+let currentTime = `${hours}:${minutes} ${amOrPm}`;
+
+console.log(today + ' ' + currentTime);
+    </script>
+</html>
